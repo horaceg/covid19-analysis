@@ -5,5 +5,6 @@ draft: true
 ---
 
 {{< importPartial "covid/combined.html" >}}
+<!-- {{ partial "covid/combined.html" . }} -->
 
 <!-- {{< importPartial "covid/ts_graph.html" >}} -->
