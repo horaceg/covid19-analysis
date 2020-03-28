@@ -6,4 +6,4 @@ draft: true
 
 {{< importPartial "covid/three_maps.html" >}}
 
-<!-- {{< importPartial "covid/ts_graph.html" >}} -->
+{{< importPartial "covid/ts_graph.html" >}}
