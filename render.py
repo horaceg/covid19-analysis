@@ -26,7 +26,7 @@ def make_chart(df_long):
     .add_selection(selection_legend)
     .transform_filter(selection_legend)
             .properties(
-                width=700, height=400, 
+                width=670, height=400, 
                 title='Confirmed cases')
 
     |
@@ -36,7 +36,7 @@ def make_chart(df_long):
                 count='sum(count)',
                 groupby=['kind', 'date']
             ).properties(
-                width=700, height=400, 
+                width=670, height=400, 
                 title='Evolution')
     ).configure(autosize='pad')
 

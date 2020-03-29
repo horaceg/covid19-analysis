@@ -39,7 +39,7 @@ jobs:
         run: |
           if ! git diff --no-ext-diff --quiet --exit-code; then
             git config user.email "horace.guy.k@gmail.com"
-            git config user.name "Horace Guy"
+            git config user.name "Horace Guy - Bot"
             git commit -am "update combined chart"
           fi
 
