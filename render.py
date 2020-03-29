@@ -24,7 +24,7 @@ def make_chart(df_long):
     )
 
     chart = (map_chart
-    .encode(color=alt.condition(selection_country_click, 'count:Q', alt.value('lightgray'), scale=alt.Scale(scheme='reds', type= 'log', base='10')))
+    .encode(color=alt.condition(selection_country_click, 'count:Q', alt.value('lightgray'), scale=alt.Scale(scheme='reds', type= 'log', base=10)))
     .add_selection(selection_country_click)
     .add_selection(selection_legend)
     .transform_filter(selection_legend)
