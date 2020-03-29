@@ -4,6 +4,7 @@ date: 2020-03-28T09:21:59+01:00
 draft: true
 ---
 
+<!DOCTYPE html>
 <html>
 <head>
   <style>

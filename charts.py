@@ -33,7 +33,7 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
            )
 
     lines = (base
-             .mark_line(point=True)
+             .mark_line(point=False)
              .encode(
                 alt.Color(
                     'kind:N', 
