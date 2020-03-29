@@ -45,6 +45,7 @@ if __name__ == "__main__":
 
     alt.data_transformers.enable('default', max_rows=None)
     alt.renderers.enable('html')
+    alt.themes.enable('fivethirtyeight')
 
     chart = make_chart(df_long)
     chart.save(sys.stdout, format='html')
