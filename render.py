@@ -10,9 +10,6 @@ def make_chart(df_long):
     data_long = make_data_long(df_long)
     selection_legend, selection_tooltip = make_ts_selections(data_long)
     ts_chart = make_ts_chart(data_long, *make_ts_selections(data_long))
-    ts_chart
-
-    # Map
 
     map_data = make_map_data(data_long, countries)
     map_chart = make_map(map_data, kind_schemes)
@@ -28,14 +25,14 @@ def make_chart(df_long):
     .add_selection(selection_country_click)
     .add_selection(selection_legend)
     .transform_filter(selection_legend)
-            .properties(width=650, height=400, title='Confirmed cases')
-    & 
+            .properties(width='container', height='container', title='Confirmed cases')
+    | 
             ts_chart.add_selection(selection_country_click)
             .transform_filter(selection_country_click)
             .transform_aggregate(
                 count='sum(count)',
                 groupby=['kind', 'date']
-            ).properties(width=650, height=400, title='Evolution')
+            ).properties(width='container', height='container', title='Evolution')
     )
     return chart
 
