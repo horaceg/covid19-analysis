@@ -29,7 +29,7 @@ def make_chart(df_long):
     .add_selection(selection_legend)
     .transform_filter(selection_legend)
             .properties(width=650, height=400, title='Confirmed cases')
-    | 
+    & 
             ts_chart.add_selection(selection_country_click)
             .transform_filter(selection_country_click)
             .transform_aggregate(
