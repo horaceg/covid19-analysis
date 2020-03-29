@@ -36,7 +36,7 @@ def make_chart(df_long):
                 count='sum(count)',
                 groupby=['status', 'date']
             ).properties(
-                width=670, height=400, 
+                width=500, height=400, 
                 title='Evolution')
     ).configure(autosize='pad')
 
