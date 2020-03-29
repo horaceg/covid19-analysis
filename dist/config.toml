@@ -2,3 +2,5 @@ baseURL = "https://covid19-analysis.netlify.com/"
 languageCode = "en-us"
 title = "A simple Covid-19 analysis"
 theme = "ananke"
+
+googleAnalytics = "UA-87971221-3"
