@@ -30,8 +30,8 @@ jobs:
           channels: conda-forge
 
       - name: bootstrap
-        run: cd main && ./scripts/bootstrap.sh
-      
+        run: ./scripts/bootstrap.sh
+
       - name: render chart
         run: /usr/share/miniconda/bin/python render.py > dist/layouts/partials/covid/combined.html
       
