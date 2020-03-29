@@ -24,18 +24,18 @@ def make_chart(df_long):
     )
 
     chart = (map_chart
-    .encode(color=alt.condition(selection_country_click, 'count:Q', alt.value('lightgray'), scale=alt.Scale(scheme='reds', type= 'log', base=10)))
+    .encode(color=alt.condition(selection_country_click, 'count:Q', alt.value('lightgray'), scale=alt.Scale(scheme='oranges', type= 'log', base=10)))
     .add_selection(selection_country_click)
     .add_selection(selection_legend)
     .transform_filter(selection_legend)
-            .properties(width=650, height=400)
+            .properties(width=650, height=400, title='Confirmed cases')
     | 
             ts_chart.add_selection(selection_country_click)
             .transform_filter(selection_country_click)
             .transform_aggregate(
                 count='sum(count)',
                 groupby=['kind', 'date']
-            ).properties(width=650, height=400)
+            ).properties(width=650, height=400, title='Evolution')
     )
     return chart
 
