@@ -48,16 +48,18 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
             .mark_rule()
             .encode(
                 opacity=alt.condition(selection_tooltip, alt.value(0.3), alt.value(0)),
-                tooltip=[alt.Tooltip(c, type='quantitative') for c in sorted(data_long.kind.unique())])
+                tooltip=[
+                    alt.Tooltip(c, type='quantitative')
+                    for c in sorted(data_long.kind.unique())]
+                    # + [alt.Tooltip('date', type='temporal')]
+                    )
             .add_selection(selection_tooltip)
            )
 
-    chart = ((lines
-             .encode(opacity=alt.condition(selection_legend, alt.value(1), alt.value(0.2)))
+    chart = ((lines.encode(opacity=alt.condition(selection_legend, alt.value(1), alt.value(0.2)))
              + rule
-             + points
-            ).add_selection(selection_legend)
-            )
+             + points)
+             .add_selection(selection_legend))
     return chart
 
 kind_schemes = {
