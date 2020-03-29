@@ -28,14 +28,14 @@ def make_chart(df_long):
     .add_selection(selection_country_click)
     .add_selection(selection_legend)
     .transform_filter(selection_legend)
-            .properties(width=700, height=400)
+            .properties(width=650, height=400)
     | 
             ts_chart.add_selection(selection_country_click)
             .transform_filter(selection_country_click)
             .transform_aggregate(
                 count='sum(count)',
                 groupby=['kind', 'date']
-            ).properties(width=700, height=400)
+            ).properties(width=650, height=400)
     )
     return chart
 
