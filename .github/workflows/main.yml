@@ -41,8 +41,9 @@ jobs:
             git config user.email "horace.guy.k@gmail.com"
             git config user.name "Horace Guy"
             git commit -am "update combined chart"
-            git remote set-url origin "$(git config --get remote.origin.url | sed 's#http.*com/#git@github.com:#g')"
-            git push origin master
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: push website
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
