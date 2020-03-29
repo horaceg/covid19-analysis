@@ -35,9 +35,12 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
     lines = (base
              .mark_line(point=True)
              .encode(
+                alt.Color(
+                    'kind:N', 
+                    scale=alt.Scale(
+                        domain=['confirmed', 'recovered', 'deaths'], 
+                        range=['orange', 'green', 'black'])),
                 y='count:Q',
-                color='kind:N',
-                #  tooltip=['count']
              )
             )
 
