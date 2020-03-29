@@ -11,12 +11,12 @@ def make_data_long(df_long):
                  .replace(0, np.nan)
                  .dropna()
                  .reset_index()
-                #  .pipe(lambda f: pd.concat([f, f.groupby(['date', 'kind'])['count'].sum().reset_index().assign(country='all')]))
+                #  .pipe(lambda f: pd.concat([f, f.groupby(['date', 'status'])['count'].sum().reset_index().assign(country='all')]))
                 )
     return data_long
 
 def make_ts_selections(data_long):
-    selection_legend = alt.selection_single(fields=['kind'], bind='legend', empty='all')
+    selection_legend = alt.selection_single(fields=['status'], bind='legend', empty='all')
 
     selection_tooltip = alt.selection_single(fields=['date'], 
                                              nearest=True, 
@@ -36,7 +36,7 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
              .mark_line(point=False)
              .encode(
                 alt.Color(
-                    'kind:N', 
+                    'status:N', 
                     scale=alt.Scale(
                         domain=['confirmed', 'recovered', 'deaths'], 
                         range=['orange', 'green', 'black'])),
@@ -47,13 +47,13 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
     points = lines.mark_point().transform_filter(selection_tooltip)
 
     rule = (base
-            .transform_pivot('kind', value='count', groupby=['date'])
+            .transform_pivot('status', value='count', groupby=['date'])
             .mark_rule()
             .encode(
                 opacity=alt.condition(selection_tooltip, alt.value(0.3), alt.value(0)),
                 tooltip=[
                     alt.Tooltip(c, type='quantitative')
-                    for c in sorted(data_long.kind.unique())]
+                    for c in sorted(data_long.status.unique())]
                     # + [alt.Tooltip('date', type='temporal')]
                     )
             .add_selection(selection_tooltip)
@@ -65,7 +65,7 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
              .add_selection(selection_legend))
     return chart
 
-kind_schemes = {
+status_schemes = {
     'deaths': 'greys', 
     'recovered': 'greens', 
     'confirmed': 'reds'
@@ -82,20 +82,20 @@ def make_map_data(data_long, countries):
                     ) 
                     
     map_data = (data_long_map
-                .groupby(['country', 'kind'])
+                .groupby(['country', 'status'])
                 .last()
                 .reset_index()
-                .assign(scheme=lambda f: f['kind'].map(kind_schemes))
+                .assign(scheme=lambda f: f['status'].map(status_schemes))
                 .assign(day=lambda f: f['date'].dt.dayofyear)
             )
     return map_data
 
 
 
-def make_map(map_data, kind_schemes):
-    # selection_kind = alt.selection_single(
-    #     fields=['kind'],
-    #     name='kind',
+def make_map(map_data, status_schemes):
+    # selection_status = alt.selection_single(
+    #     fields=['status'],
+    #     name='status',
     #     empty='all', 
     #     bind=alt.binding_select(options=sorted(['deaths', 'confirmed', 'recovered']))
     # )
@@ -119,9 +119,9 @@ def make_map(map_data, kind_schemes):
         .encode(color=alt.Color('count:Q', scale=alt.Scale(scheme='reds')))
         .transform_lookup(
             lookup='id',
-            from_=alt.LookupData(data=map_data.query('kind ==  "confirmed"'),
+            from_=alt.LookupData(data=map_data.query('status ==  "confirmed"'),
                                     key='id', 
-                                    fields=['count', 'kind', 'country', 'day', 'date'])
+                                    fields=['count', 'status', 'country', 'day', 'date'])
         )
         # .add_selection(selection_legend_map)
         # .transform_filter(selection_legend_map)
@@ -130,16 +130,16 @@ def make_map(map_data, kind_schemes):
 
     base = make_base()
     # charts = dict()
-    # for kind, scheme in kind_schemes.items():
-    #     charts[kind] = (base
+    # for status, scheme in status_schemes.items():
+    #     charts[status] = (base
     #                     .encode(color=alt.Color('count:Q', scale=alt.Scale(scheme=scheme)))
     #                     .transform_lookup(
     #                         lookup='id',
-    #                         from_=alt.LookupData(data=map_data.query('kind == @kind'), 
+    #                         from_=alt.LookupData(data=map_data.query('status == @status'), 
     #                                              key='id', 
-    #                                              fields=['count', 'kind', 'country', 'day', 'date'])
+    #                                              fields=['count', 'status', 'country', 'day', 'date'])
     #                     )
-    #                     .properties(title=kind)
+    #                     .properties(title=status)
     #                 #    .add_selection(select_day)
     #                 #    .transform_filter(select_day)
     #                    )
@@ -152,5 +152,5 @@ def make_map(map_data, kind_schemes):
     #         #                 contains='padding')
     #         #                 )
     #         )
-    return base#.add_selection(selection_kind).transform_filter(selection_kind)
+    return base#.add_selection(selection_status).transform_filter(selection_status)
     

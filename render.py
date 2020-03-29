@@ -3,7 +3,7 @@ import sys
 import altair as alt
 
 from charts import make_ts_chart, make_ts_selections, make_data_long
-from charts import make_map, kind_schemes, make_map_data, countries, make_map_data
+from charts import make_map, status_schemes, make_map_data, countries, make_map_data
 from fetch import fetch_timeseries, TS_URL
 
 def make_chart(df_long):
@@ -12,7 +12,7 @@ def make_chart(df_long):
     ts_chart = make_ts_chart(data_long, *make_ts_selections(data_long))
 
     map_data = make_map_data(data_long, countries)
-    map_chart = make_map(map_data, kind_schemes)
+    map_chart = make_map(map_data, status_schemes)
 
     selection_country_click = alt.selection_single(
         fields=['country'],
@@ -34,7 +34,7 @@ def make_chart(df_long):
             .transform_filter(selection_country_click)
             .transform_aggregate(
                 count='sum(count)',
-                groupby=['kind', 'date']
+                groupby=['status', 'date']
             ).properties(
                 width=670, height=400, 
                 title='Evolution')
@@ -44,7 +44,7 @@ def make_chart(df_long):
 
 if __name__ == "__main__":
     df = fetch_timeseries(TS_URL)
-    df_long = df.stack().rename('count').rename_axis(index={None: 'kind'})
+    df_long = df.stack().rename('count').rename_axis(index={None: 'status'})
 
     alt.data_transformers.enable('default', max_rows=None)
     alt.renderers.enable('html')
