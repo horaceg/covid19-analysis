@@ -38,8 +38,8 @@ jobs:
       - name: update website
         run: |
           if ! git diff --no-ext-diff --quiet --exit-code; then
-      #       git config user.email "horace.guy.k@gmail.com"
-      #       git config user.name "Horace Guy"
+            # git config user.email "horace.guy.k@gmail.com"
+            # git config user.name "Horace Guy"
             git commit -am "update combined chart"
             git remote set-url origin "$(git config --get remote.origin.url | sed 's#http.*com/#git@github.com:#g')"
             git push origin master
