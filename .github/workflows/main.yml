@@ -6,7 +6,7 @@ name: render charts
 # events but only for the master branch
 on:
   schedule:
-    - cron: '58 8 * * *'
+    - cron: '58 4 * * *'
   push:
     branches: [ master ]
 
