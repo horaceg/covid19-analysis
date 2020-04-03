@@ -33,7 +33,7 @@ jobs:
         run: ./scripts/bootstrap.sh
 
       - name: render chart
-        run: /usr/share/miniconda/bin/python render.py > dist/layouts/partials/covid/combined.html
+        run: /usr/share/miniconda/bin/python render.py json > dist/static/combined.json
       
       - name: update website
         run: |
