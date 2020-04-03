@@ -13,21 +13,11 @@
 <body>
   <div id="vis"></div>
   <script>
-    function request() {
-      let here = location.href;
-      let thisUrl = here.substring(0, here.length - 15);
-      let jsonUrl = thisUrl + 'combined.json';
-      console.log(jsonUrl);
-      // return fetch(jsonUrl).then(response => response.json())
-      fetch(jsonUrl)
-        .then((response) => {
-          return response.json();
-  })
-    }
     async function request() {
       let here = location.href;
-      let thisUrl = here.substring(0, here.length - 15);
-      let jsonUrl = thisUrl + 'combined.json';
+      console.log(here);
+      let thisUrl = here.split('/').slice(0, -1).join('/') ;
+      let jsonUrl = thisUrl + '/combined.json';
       console.log(jsonUrl);
       let data = await fetch(jsonUrl).then(response => response.json()) ;
       return data

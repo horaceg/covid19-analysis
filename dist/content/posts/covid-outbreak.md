@@ -4,10 +4,8 @@ date: 2020-03-28T09:21:59+01:00
 draft: true
 ---
 
-<!-- {{< importPartial "covid/combined.html" >}} -->
+[dashboard](/dashboard.html)
 
-[Source](https://github.com/pomber/covid19)
+[source code](https://github.com/horaceg/covid19-analysis)
 
-<!-- {{ partial "covid/combined.html" . }} -->
-
-<!-- {{< importPartial "covid/ts_graph.html" >}} -->
+[data source](https://github.com/pomber/covid19)
