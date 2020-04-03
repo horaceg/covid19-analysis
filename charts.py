@@ -15,25 +15,34 @@ def make_data_long(df_long):
                 )
     return data_long
 
-def make_ts_selections(data_long):
-    selection_legend = alt.selection_single(fields=['status'], bind='legend', empty='all')
+def assign_dod(g):
+    return g.assign(diff=g.diff().fillna(0)).assign(diff_rel=lambda gg: gg['diff'].div(gg['count']))
+
+def make_dod(df_long):
+    return (df_long
+             .to_frame()
+             .groupby(['country', 'status'])
+             .apply(assign_dod)
+            )
+
+def make_ts_selections():
+    selection_legend = alt.selection_single(
+        fields=['status'], bind='legend', empty='all',
+        init={'status': 'confirmed'}
+    )
 
     selection_tooltip = alt.selection_single(fields=['date'], 
                                              nearest=True, 
                                              on='mouseover', 
                                              empty='none', 
-                                             clear='mouseout')
+                                             clear='mouseout', 
+                                             )
     
     return selection_legend, selection_tooltip
 
-def make_ts_chart(data_long, selection_legend, selection_tooltip):
-    base = (alt
-            .Chart(data_long)
-            .encode(x='date:T')
-           )
-
-    lines = (base
-             .mark_line(point=False)
+def make_ts_chart(base_ts, status_list, selection_legend, selection_tooltip):
+    lines = (base_ts
+             .mark_line(point=True)
              .encode(
                 alt.Color(
                     'status:N', 
@@ -46,14 +55,14 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
 
     points = lines.mark_point().transform_filter(selection_tooltip)
 
-    rule = (base
+    rule = (base_ts
             .transform_pivot('status', value='count', groupby=['date'])
             .mark_rule()
             .encode(
                 opacity=alt.condition(selection_tooltip, alt.value(0.3), alt.value(0)),
                 tooltip=[
                     alt.Tooltip(c, type='quantitative')
-                    for c in sorted(data_long.status.unique())]
+                    for c in status_list]
                     # + [alt.Tooltip('date', type='temporal')]
                     )
             .add_selection(selection_tooltip)
@@ -61,7 +70,8 @@ def make_ts_chart(data_long, selection_legend, selection_tooltip):
 
     chart = ((lines.encode(opacity=alt.condition(selection_legend, alt.value(1), alt.value(0.2)))
              + rule
-             + points)
+             + points
+             )
              .add_selection(selection_legend))
     return chart
 
@@ -114,43 +124,94 @@ def make_map(map_data, status_schemes):
         base = (alt
              .Chart(countries)
                 .encode(
-                    tooltip=['count:Q', 'country:N', 'date:T', 'day:Q'])
+                    tooltip=['count:Q', 'country:N', 'day:Q'])
                 .mark_geoshape(stroke='white', strokeWidth=0.5)
         .encode(color=alt.Color('count:Q', scale=alt.Scale(scheme='reds')))
         .transform_lookup(
             lookup='id',
-            from_=alt.LookupData(data=map_data.query('status ==  "confirmed"'),
+            from_=alt.LookupData(data=map_data.query('status == "confirmed"'),
                                     key='id', 
                                     fields=['count', 'status', 'country', 'day', 'date'])
         )
-        # .add_selection(selection_legend_map)
-        # .transform_filter(selection_legend_map)
                )
         return base
 
     base = make_base()
-    # charts = dict()
-    # for status, scheme in status_schemes.items():
-    #     charts[status] = (base
-    #                     .encode(color=alt.Color('count:Q', scale=alt.Scale(scheme=scheme)))
-    #                     .transform_lookup(
-    #                         lookup='id',
-    #                         from_=alt.LookupData(data=map_data.query('status == @status'), 
-    #                                              key='id', 
-    #                                              fields=['count', 'status', 'country', 'day', 'date'])
-    #                     )
-    #                     .properties(title=status)
-    #                 #    .add_selection(select_day)
-    #                 #    .transform_filter(select_day)
-    #                    )
-
-    # chart = (alt.vconcat(*charts.values())
-    #          .resolve_scale(color='independent')
-    #         #  .properties(
-    #         #             autosize=alt.AutoSizeParams(
-    #         #                 type='fit-x',
-    #         #                 contains='padding')
-    #         #                 )
-    #         )
-    return base#.add_selection(selection_status).transform_filter(selection_status)
+    return (base
+        # .add_selection(selection_status).transform_filter(selection_status)
+        # .add_selection(select_day).transform_filter(select_day)
+    )
     
+def make_dod_chart(dod_long):
+    return (alt.Chart(
+        dod_long.reset_index()#.query('status == "deaths"')
+    )
+            .mark_bar(point=True)
+            .encode(alt.Y('diff',
+#                           axis=alt.Axis(format='%')
+                         ), 
+                    x='date', 
+                    color='status',
+                    tooltip=['diff', 'diff_rel', 'date']
+                   )
+            .properties(width=500, height=300, title='New cases')
+#             .transform_aggregate(
+#                 diff='sum(diff)',
+#                 groupby=['status', 'date']
+#             )
+           )
+    
+def combine_map_ts(map_chart, ts_chart, dod_chart, selection_legend):
+    selection_country = alt.selection_single(
+        fields=['country'],
+        name='Country of',
+        empty='all',
+    )
+
+    map_chart2 = (map_chart
+            .encode(color=alt.condition(selection_country,
+                'count:Q', 
+                alt.value('lightgray'), 
+                scale=alt.Scale(scheme='oranges', type= 'log', base=10))
+                )
+    .add_selection(selection_country)
+    # .add_selection(selection_legend)
+    # .transform_filter(selection_legend)
+            .properties(
+                width=670, 
+                # width='container',
+                height=400, 
+                title='Confirmed cases')
+    )
+    ts_chart2 = (ts_chart
+            .add_selection(selection_country)
+            .transform_filter(selection_country)
+            .transform_aggregate(
+                count='sum(count)',
+                groupby=['status', 'date']
+            ).properties(
+                width=500,
+                # width='container', 
+                height=400, 
+                title='Cumulated cases')
+    )
+    
+    dod_chart2 = (dod_chart
+                  .add_selection(selection_country)
+                  .transform_filter(selection_country)
+                  .transform_aggregate(
+                      diff='sum(diff)',
+                      diff_rel='sum(diff_rel)',
+                      groupby=['status', 'date']
+                  )
+                    .add_selection(selection_legend)
+                    .transform_filter(selection_legend)
+                    .encode(
+                opacity=alt.condition(selection_legend, alt.value(1), alt.value(0.2)))
+    )
+    
+    chart = (map_chart2.properties(width=900, title='Confirmed cases today')
+     & (ts_chart2.properties(width=500, height=300) 
+        | dod_chart2)
+    )
+    return chart

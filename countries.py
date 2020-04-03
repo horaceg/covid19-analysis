@@ -263,7 +263,7 @@ to_replace = {'United States of America': 'US',
 "Lao People's Democratic Republic": 'Laos',
 "Viet Nam": 'Vietnam',
 'Venezuela (Bolivarian Republic of)': 'Venezuela',
-
+'Korea, Republic of': 'Korea, South'
 }
 
 for k, v in to_replace.items():

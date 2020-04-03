@@ -3,42 +3,23 @@ import sys
 import altair as alt
 
 from charts import make_ts_chart, make_ts_selections, make_data_long
-from charts import make_map, status_schemes, make_map_data, countries, make_map_data
+from charts import (make_map, status_schemes, make_map_data, countries, 
+                    make_map_data, combine_map_ts, make_dod, make_dod_chart)
 from fetch import fetch_timeseries, TS_URL
 
 def make_chart(df_long):
     data_long = make_data_long(df_long)
-    selection_legend, selection_tooltip = make_ts_selections(data_long)
-    ts_chart = make_ts_chart(data_long, *make_ts_selections(data_long))
+    dod_long = make_dod(df_long).reset_index()
+
+    base_ts =  (alt.Chart(data_long).encode(x='date:T'))
+    selection_legend, selection_tooltip = make_ts_selections()
+    ts_chart = make_ts_chart(base_ts, sorted(dod_long.status.unique()), selection_legend, selection_tooltip)
 
     map_data = make_map_data(data_long, countries)
     map_chart = make_map(map_data, status_schemes)
 
-    selection_country_click = alt.selection_single(
-        fields=['country'],
-        name='Country of',
-        empty='all',
-    )
-
-    chart = (map_chart
-    .encode(color=alt.condition(selection_country_click, 'count:Q', alt.value('lightgray'), scale=alt.Scale(scheme='oranges', type= 'log', base=10)))
-    .add_selection(selection_country_click)
-    .add_selection(selection_legend)
-    .transform_filter(selection_legend)
-            .properties(
-                width=670, height=400, 
-                title='Confirmed cases')
-
-    |
-            ts_chart.add_selection(selection_country_click)
-            .transform_filter(selection_country_click)
-            .transform_aggregate(
-                count='sum(count)',
-                groupby=['status', 'date']
-            ).properties(
-                width=500, height=400, 
-                title='Evolution')
-    ).configure(autosize='pad')
+    dod_chart = make_dod_chart(dod_long)
+    chart = combine_map_ts(map_chart, ts_chart, dod_chart, selection_legend)
 
     return chart
 
@@ -51,4 +32,9 @@ if __name__ == "__main__":
     alt.themes.enable('fivethirtyeight')
 
     chart = make_chart(df_long)
-    chart.save(sys.stdout, format='html')
+
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'json':
+            chart.save(sys.stdout, format='json')
+        else:
+            chart.save(sys.stdout, format='html')
