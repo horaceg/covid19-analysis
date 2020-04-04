@@ -7,6 +7,7 @@ import logging
 import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
+from geoIds import GEO_IDS
 
 # PyMuPDF
 import fitz
@@ -337,7 +338,13 @@ def parse_all(us=False):
             data.append(d)
     df = pd.DataFrame(data)
     df = (df.assign(value=lambda f: f['value'] * (f['change'] / f['changecalc']))
-          .replace("workplaces", 'workplace'))
+          .replace("workplaces", 'workplace')
+          .drop('changecalc', axis=1))
+
+    if not us:
+        df = (df.rename({'state': 'country_geoid', 
+                         'county': 'region'}, axis=1)
+              .assign(country=lambda f: f['country_geoid'].map(GEO_IDS)))
     return df
 
 
