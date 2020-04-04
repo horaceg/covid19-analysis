@@ -10,7 +10,7 @@ Full timeseries data from Google's mobility [reports](https://www.google.com/cov
 
 Note that numbers for a whole country are available as a region, when the `region` column equals `total` (I hope no country has a region called `totals` !)
 
-Thanks to reddit user _typhoidisbad_ who made this possible by [sharing]() his code, to produce the dataset on US states and counties.
+Thanks to reddit user _typhoidisbad_ who made this possible by [sharing](https://www.reddit.com/r/datasets/comments/fuo64p/google_covid19_mobility_reports_time_series_data/) his code, to produce the dataset on US states and counties.
 
 Full source code and website is available [here](https://github.com/horaceg/covid19-analysis).  
 Check out the `mobility` folder for this specific work.
