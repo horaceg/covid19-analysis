@@ -2,3 +2,5 @@ dist/public
 __pycache__
 .ipynb_checkpoints/
 .vscode
+*.pdf
+*.csv
