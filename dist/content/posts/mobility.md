@@ -1,5 +1,5 @@
 ---
-title: "Mobility data"
+title: "Mobility datasets are here"
 date: 2020-04-04
 draft: true
 ---
@@ -18,3 +18,5 @@ Check out the `mobility` folder for this specific work.
 Basic visualisations of this dataset can be found [here](https://github.com/horaceg/covid19-analysis/blob/master/mobility/viz.ipynb).
 
 If you have any suggestion, please file an issue [here](https://github.com/horaceg/covid19-analysis/issues).
+
+If you are looking for a general-purpose dashboard on Covid-19, check [this](/posts/covid-outbreak) out.
