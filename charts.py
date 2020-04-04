@@ -101,50 +101,36 @@ def make_map_data(data_long, countries):
     return map_data
 
 
-
 def make_map(map_data, status_schemes):
-    # selection_status = alt.selection_single(
-    #     fields=['status'],
-    #     name='status',
-    #     empty='all', 
-    #     bind=alt.binding_select(options=sorted(['deaths', 'confirmed', 'recovered']))
-    # )
+    map_data = (map_data
+                .set_index(['country', 'id', 'day', 'date', 'status'])
+                .unstack()
+                ['count']
+                .reset_index())
 
-    slider = alt.binding_range(min=int(map_data.day.min()),
-                               max=int(map_data.day.max()),
-                               step=1)
-
-    select_day = alt.selection_single(name='day',
-                                       fields=['day'],
-                                       bind=slider,
-                                      on='none',
-                                     init={'day': int(map_data.day.max())}
-                                     )
-    def make_base():
-        base = (alt
+    base = (alt
              .Chart(countries)
                 .encode(
-                    tooltip=['count:Q', 'country:N', 'day:Q'])
+                    tooltip=['count:Q', 'country:N', 'day:Q', 'status:N'])
                 .mark_geoshape(stroke='white', strokeWidth=0.5)
-        .encode(color=alt.Color('count:Q', scale=alt.Scale(scheme='reds')))
-        .transform_lookup(
-            lookup='id',
-            from_=alt.LookupData(data=map_data.query('status == "confirmed"'),
-                                    key='id', 
-                                    fields=['count', 'status', 'country', 'day', 'date'])
+                .transform_lookup(
+                    lookup='id',
+                    from_=alt.LookupData(data=map_data,
+                                         key='id', 
+                                         fields=['confirmed', 'recovered', 'deaths', 
+                                                 'country', 'day', 'date'])
         )
-               )
-        return base
-
-    base = make_base()
-    return (base
-        # .add_selection(selection_status).transform_filter(selection_status)
-        # .add_selection(select_day).transform_filter(select_day)
+        .transform_fold(
+            fold=['confirmed', 'recovered', 'deaths'],
+            as_=['status', 'count']
+        )
     )
+    
+    return base
     
 def make_dod_chart(dod_long):
     return (alt.Chart(
-        dod_long.reset_index()#.query('status == "deaths"')
+        dod_long.reset_index()
     )
             .mark_bar(point=True)
             .encode(alt.Y('diff',
@@ -169,20 +155,21 @@ def combine_map_ts(map_chart, ts_chart, dod_chart, selection_legend):
     )
 
     map_chart2 = (map_chart
-            .encode(color=alt.condition(selection_country,
-                'count:Q', 
-                alt.value('lightgray'), 
-                scale=alt.Scale(scheme='oranges', type= 'log', base=10))
+            .encode(color=alt.condition(
+                selection_country,
+                alt.Color('count:Q', scale=alt.Scale(scheme='oranges', type='log', base=10)),
+                alt.value('lightgray'))
                 )
-    .add_selection(selection_country)
-    # .add_selection(selection_legend)
-    # .transform_filter(selection_legend)
+            .add_selection(selection_country)
             .properties(
                 width=670, 
                 # width='container',
                 height=400, 
                 title='Confirmed cases')
+            .add_selection(selection_legend)
+            .transform_filter(selection_legend)
     )
+
     ts_chart2 = (ts_chart
             .add_selection(selection_country)
             .transform_filter(selection_country)
@@ -210,7 +197,7 @@ def combine_map_ts(map_chart, ts_chart, dod_chart, selection_legend):
                 opacity=alt.condition(selection_legend, alt.value(1), alt.value(0.2)))
     )
     
-    chart = (map_chart2.properties(width=900, title='Confirmed cases today')
+    chart = (map_chart2.properties(width=900, title='Last cumulative cases')
      & (ts_chart2.properties(width=500, height=300) 
         | dod_chart2)
     )

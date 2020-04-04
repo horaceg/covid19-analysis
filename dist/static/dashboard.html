@@ -15,17 +15,17 @@
   <script>
     async function request() {
       let here = location.href;
-      console.log(here);
+      // console.log(here);
       let thisUrl = here.split('/').slice(0, -1).join('/') ;
       let jsonUrl = thisUrl + '/combined.json';
-      console.log(jsonUrl);
+      // console.log(jsonUrl);
       let data = await fetch(jsonUrl).then(response => response.json()) ;
       return data
     }
 
     (async function(vegaEmbed) {
       let data = await request();
-      console.log(data);
+      // console.log(data);
       var spec = data;
       var embedOpt = {"mode": "vega-lite"};
 
