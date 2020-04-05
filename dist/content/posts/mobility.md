@@ -12,7 +12,7 @@ For gzipped csv datasets:
 - [world csv dataset](/mobility/world.csv.gz)
 - [US csv dataset](/mobility/us.csv.gz)
 
-An viz is also available [here](/mobility/charts/map.html).
+A viz is also available [here](/mobility/charts/map.html).
 
 Note that numbers for a whole country are available as a region, when the `region` column equals `total` (I hope no country has a region called `totals` !)
 
