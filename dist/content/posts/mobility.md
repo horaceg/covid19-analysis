@@ -1,20 +1,20 @@
 ---
 title: "Mobility datasets are here"
 date: 2020-04-04
-draft: true
+draft: false
 ---
 
-Full timeseries data from Google's mobility [reports](https://www.google.com/covid19/mobility/) are now available at:
-- [world dataset](/mobility/world.json.gz): countries + regions
-- [US dataset](/mobility/us.json.gz): states + counties
+Full timeseries data from Google's [mobility reports](https://www.google.com/covid19/mobility/) are now available at:
+- [World json dataset](/mobility/world.json.gz): countries + regions
+- [US json dataset](/mobility/us.json.gz): states + counties
 
 For gzipped csv datasets:
-- [world csv dataset](/mobility/world.csv.gz)
+- [World csv dataset](/mobility/world.csv.gz)
 - [US csv dataset](/mobility/us.csv.gz)
 
 A viz is also available [here](/mobility/charts/map.html).
 
-Note that numbers for a whole country are available as a region, when the `region` column equals `total` (I hope no country has a region called `totals` !)
+Note that numbers for a whole country are available as a region, when the `region` column equals `total`
 
 Thanks to reddit user _typhoidisbad_ who made this possible by [sharing](https://www.reddit.com/r/datasets/comments/fuo64p/google_covid19_mobility_reports_time_series_data/) his code, to produce the dataset on US states and counties.
 
