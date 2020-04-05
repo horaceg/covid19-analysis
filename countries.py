@@ -1,7 +1,8 @@
+# ISO 3166-1 numeric 
 COUNTRY_MAP = {
     4: 'Afghanistan', 
 8: 'Albania', 
-10: 'Antarctica', 
+# 10: 'Antarctica', 
 12: 'Algeria', 
 16: 'American Samoa', 
 20: 'Andorra', 
@@ -266,5 +267,20 @@ to_replace = {'United States of America': 'US',
 'Korea, Republic of': 'Korea, South'
 }
 
+ecdc_names = {
+# for mobility dataset
+'Cote dIvoire': 'Côte d\'Ivoire', 
+ 'Cape Verde': 'Cabo Verde', 
+ 'Czech Republic': 'Czechia', 
+ 'Guinea Bissau': 'Guinea-Bissau',
+ 'South Korea': 'Korea, South' , 
+ 'Moldova': 'Moldova, Republic of', 
+ 'Taiwan': 'Taiwan, Province of China', 
+ 'United Republic of Tanzania': 'Tanzania, United Republic of'
+}
+
 for k, v in to_replace.items():
     FROM_COUNTRY[v] = FROM_COUNTRY[k]
+
+for k, v in ecdc_names.items():
+    FROM_COUNTRY[k] = FROM_COUNTRY[v]

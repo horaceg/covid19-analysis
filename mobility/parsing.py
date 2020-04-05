@@ -352,6 +352,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'us':
         df = parse_all(us=True)
         df.to_json('../dist/static/mobility/us.json.gz', orient='records', indent=2)
+        df.to_csv('../dist/static/mobility/us.csv.gz', index=False)
+
     else:
         df = parse_all(us=False)
         df.to_json('../dist/static/mobility/world.json.gz', orient="records", indent=2)
+        df.to_csv('../dist/static/mobility/world.csv.gz', index=False)
