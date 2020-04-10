@@ -258,14 +258,14 @@ def parse_page_total(doc, ipage, verbose=False):
         ))
     return ret
 
-def build_pdf_path(state, us):
+def build_pdf_path(state, us, date):
     if us: 
-        return f"us_pdfs/2020-03-29_US_{state}_Mobility_Report_en.pdf"
+        return f"us_pdfs/{date}/{date}_US_{state}_Mobility_Report_en.pdf"
     else:
-        return f"pdfs/2020-03-29_{state}_Mobility_Report_en.pdf"
+        return f"pdfs/{date}/{date}_{state}_Mobility_Report_en.pdf"
 
-def parse_state(state, us):
-    pdfpath = build_pdf_path(state, us)
+def parse_state(state, us, date):
+    pdfpath = build_pdf_path(state, us, date)
     logging.info(f"Parsing pages 2+ for state {state} : ", pdfpath)
     doc = fitz.Document(pdfpath)
     data = []
@@ -287,11 +287,11 @@ def parse_state(state, us):
     #     return df[["state", "category", "change", "changecalc", "dates", "values", "page"]]
     return df
 
-def parse_state_total(state, us):
+def parse_state_total(state, us, date):
     """
     First two pages
     """
-    pdfpath = build_pdf_path(state, us)
+    pdfpath = build_pdf_path(state, us, date)
     logging.info(f"Parsing two first pages of state {state}: ", pdfpath)
     doc = fitz.Document(pdfpath)
     data = []
@@ -304,8 +304,8 @@ def parse_state_total(state, us):
     df = pd.DataFrame(data)
     return df
 
-def parse_all(us=False):
-    pdfglob = glob.glob("us_pdfs/*.pdf") if us else glob.glob("pdfs/*.pdf")
+def parse_all(date, us=False):
+    pdfglob = glob.glob(f"us_pdfs/{date}/*.pdf") if us else glob.glob(f"pdfs/{date}/*.pdf")
     if us:
         states = [x.split("_US_",1)[1].split("_Mobility",1)[0] for x in pdfglob]
     else:
@@ -313,12 +313,12 @@ def parse_all(us=False):
     dfs = []
     for state in tqdm(states):
         try:
-            state_counties = parse_state(state, us=us)
+            state_counties = parse_state(state, us=us, date=date)
         except (KeyError, IndexError) as e:
             logging.warning(str(e))
             state_counties = pd.DataFrame()
 
-        state = parse_state_total(state, us=us)
+        state = parse_state_total(state, us=us, date=date)
         dfs += [state, state_counties]
     df = pd.concat(dfs).reset_index(drop=True)
     data = []
@@ -349,12 +349,10 @@ def parse_all(us=False):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == 'us':
-        df = parse_all(us=True)
-        df.to_json('../dist/static/mobility/us.json.gz', orient='records', indent=2)
-        df.to_csv('../dist/static/mobility/us.csv.gz', index=False)
-
-    else:
-        df = parse_all(us=False)
-        df.to_json('../dist/static/mobility/world.json.gz', orient="records", indent=2)
-        df.to_csv('../dist/static/mobility/world.csv.gz', index=False)
+    dates = ['2020-03-29', '2020-04-05']
+    us = len(sys.argv) > 1 and sys.argv[1].lower() == 'us'
+    for date in dates:
+        filename = f'{date}_us' if us else f'{date}_world'
+        df = parse_all(date, us=us)
+        df.to_json(f'../dist/static/mobility/{filename}.json.gz', orient='records', indent=2)
+        df.to_csv(f'../dist/static/mobility/{filename}.csv.gz', index=False)
