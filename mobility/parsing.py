@@ -354,5 +354,5 @@ if __name__ == "__main__":
     for date in dates:
         filename = f'{date}_us' if us else f'{date}_world'
         df = parse_all(date, us=us)
-        df.to_json(f'../dist/static/mobility/{filename}.json.gz', orient='records', indent=2)
-        df.to_csv(f'../dist/static/mobility/{filename}.csv.gz', index=False)
+        df.to_json(f'data/{filename}.json.gz', orient='records', indent=2)
+        df.to_csv(f'data/{filename}.csv.gz', index=False)

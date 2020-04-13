@@ -2,7 +2,8 @@ import sys
 from pathlib import Path
 import pandas as pd
 
-DATA_PATH = Path('../dist/static/mobility')
+INPUT_PATH = Path('data')
+OUTPUT_PATH = Path('../dist/static/mobility')
 DATES = ['2020-03-29', '2020-04-05']
 
 def load_reports(dates, data_path, us=False):
@@ -27,8 +28,8 @@ def take_mean(df, us=False):
 
 if __name__ == "__main__":
     us = len(sys.argv) > 1 and sys.argv[1].lower() == 'us'
-    df = load_reports(DATES, DATA_PATH, us=us)
+    df = load_reports(DATES, INPUT_PATH, us=us)
     combined = take_mean(df, us)
     filename = 'world' if not us else 'us'
-    combined.to_csv(DATA_PATH / f'{filename}.csv.gz', index=False)
-    combined.to_json(DATA_PATH / f'{filename}.json.gz', orient='records', indent=2)
+    combined.to_csv(OUTPUT_PATH / f'{filename}.csv', index=False)
+    combined.to_json(OUTPUT_PATH / f'{filename}.json', orient='records', indent=2)
