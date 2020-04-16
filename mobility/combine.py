@@ -32,4 +32,3 @@ if __name__ == "__main__":
     combined = take_mean(df, us)
     filename = 'world' if not us else 'us'
     combined.to_csv(OUTPUT_PATH / f'{filename}.csv', index=False)
-    combined.to_json(OUTPUT_PATH / f'{filename}.json', orient='records', indent=2)
