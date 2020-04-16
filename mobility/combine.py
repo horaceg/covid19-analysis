@@ -4,7 +4,7 @@ import pandas as pd
 
 INPUT_PATH = Path('data')
 OUTPUT_PATH = Path('../dist/static/mobility')
-DATES = ['2020-03-29', '2020-04-05']
+DATES = ['2020-03-29', '2020-04-05', '2020-04-11']
 
 def load_reports(dates, data_path, us=False):
     dfs = []

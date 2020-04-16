@@ -349,10 +349,11 @@ def parse_all(date, us=False):
 
 
 if __name__ == "__main__":
-    dates = ['2020-03-29', '2020-04-05']
+    dates = ['2020-03-29', '2020-04-05', '2020-04-11']
     us = len(sys.argv) > 1 and sys.argv[1].lower() == 'us'
     for date in dates:
         filename = f'{date}_us' if us else f'{date}_world'
+        logging.info('Parsing date %s, storing in %s', date, filename)
         df = parse_all(date, us=us)
         df.to_json(f'data/{filename}.json.gz', orient='records', indent=2)
         df.to_csv(f'data/{filename}.csv.gz', index=False)
