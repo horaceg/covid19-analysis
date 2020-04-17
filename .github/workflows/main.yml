@@ -33,7 +33,7 @@ jobs:
         run: ./scripts/bootstrap.sh
 
       - name: render chart
-        run: "$(which conda | rev | cut -d'/' -f2- | rev)"/python render.py json > dist/static/combined.json
+        run: ./render.sh
       
       - name: update website
         run: |
