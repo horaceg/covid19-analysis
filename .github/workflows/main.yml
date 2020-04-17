@@ -34,7 +34,12 @@ jobs:
 
       - name: render chart
         run: ./render.sh
-      
+
+      - name: mobility parsing
+        run: |
+          cd mobility
+          ./pipeline.sh
+
       - name: update website
         run: |
           if ! git diff --no-ext-diff --quiet --exit-code; then
