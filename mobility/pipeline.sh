@@ -4,8 +4,8 @@ set -x
 
 ./download.sh
 
-python parsing.py
-python parsing.py us
+$CONDA_PREFIX/bin/python parsing.py
+$CONDA_PREFIX/bin/python parsing.py us
 
-python combine.py
-python combine.py us
+$CONDA_PREFIX/bin/python combine.py
+$CONDA_PREFIX/bin/python combine.py us
