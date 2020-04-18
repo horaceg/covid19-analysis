@@ -4,6 +4,7 @@ set -x
 
 ./download.sh
 
+mkdir -p data
 $CONDA_PREFIX/bin/python parsing.py
 $CONDA_PREFIX/bin/python parsing.py us
 
