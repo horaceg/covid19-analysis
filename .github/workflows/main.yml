@@ -28,14 +28,18 @@ jobs:
           auto-update-conda: true
           python-version: 3.6
           channels: conda-forge
+          activate-environment: covid
 
       - name: bootstrap
+        shell: bash -l {0}
         run: ./scripts/bootstrap.sh
 
       - name: render chart
+        shell: bash -l {0}
         run: ./render.sh
 
       - name: mobility parsing
+        shell: bash -l {0}
         run: |
           cd mobility
           ./pipeline.sh
