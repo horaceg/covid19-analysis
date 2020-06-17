@@ -7,8 +7,8 @@ name: render charts
 on:
   schedule:
     - cron: '58 4 * * *'
-#   push:
-#     branches: [ master ]
+  push:
+    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -38,11 +38,9 @@ jobs:
         shell: bash -l {0}
         run: ./render.sh
 
-#       - name: mobility parsing
-#         shell: bash -l {0}
-#         run: |
-#           cd mobility
-#           ./pipeline.sh
+      - name: render mobility chart
+        shell: bash -l {0}
+        run: $CONDA_PREFIX/bin/python render_mobility.py 
 
       - name: update website
         run: |

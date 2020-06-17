@@ -252,6 +252,7 @@ COUNTRY_MAP = {
 }
 
 FROM_COUNTRY = {v: k for k, v in COUNTRY_MAP.items()}
+
 to_replace = {'United States of America': 'US',
 'Russian Federation': 'Russia',
 'Iran (Islamic Republic of)': 'Iran',
@@ -264,7 +265,8 @@ to_replace = {'United States of America': 'US',
 "Lao People's Democratic Republic": 'Laos',
 "Viet Nam": 'Vietnam',
 'Venezuela (Bolivarian Republic of)': 'Venezuela',
-'Korea, Republic of': 'Korea, South'
+'Korea, Republic of': 'Korea, South',
+'United States of America': 'United States'
 }
 
 ecdc_names = {
