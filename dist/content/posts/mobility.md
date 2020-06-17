@@ -4,8 +4,6 @@ date: 2020-04-04
 draft: false
 ---
 
-Last updated: **April 16 2020**
-
 Google has recently published [mobility reports](https://www.google.com/covid19/mobility/), which essentially answer the question : _where do people spend their time ?_
 
 They dispatch places into six categories : _workplace, residential, grocery & pharmacy, parks, retail & recreation, transit stations_.  
