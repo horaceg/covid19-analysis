@@ -7,8 +7,8 @@ name: render charts
 on:
   schedule:
     - cron: '58 4 * * *'
-  push:
-    branches: [ master ]
+  # push:
+  #   branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
