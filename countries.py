@@ -266,7 +266,6 @@ to_replace = {'United States of America': 'US',
 "Viet Nam": 'Vietnam',
 'Venezuela (Bolivarian Republic of)': 'Venezuela',
 'Korea, Republic of': 'Korea, South',
-'United States of America': 'United States',
 'Myanmar': 'Myanmar (Burma)'
 }
 
@@ -279,7 +278,8 @@ ecdc_names = {
  'South Korea': 'Korea, South' , 
  'Moldova': 'Moldova, Republic of', 
  'Taiwan': 'Taiwan, Province of China', 
- 'United Republic of Tanzania': 'Tanzania, United Republic of'
+ 'United Republic of Tanzania': 'Tanzania, United Republic of',
+ 'United States': 'United States of America',
 }
 
 for k, v in to_replace.items():
