@@ -18,13 +18,16 @@ def fetch_google():
     #             .merge(isocodes, left_on='country_region_code', right_on='alpha-2_code', how='left')
     #             .merge(location_code, left_on='alpha-3_code', right_on='iso_code', how='left'))
 
-    df = (df.loc[lambda f: f['sub_region_1'].isna()]
+    df = (df.loc[lambda f: f['sub_region_1'].isna() & f["sub_region_2"].isna()]
           .rename({'country_region': 'country'}, axis=1)
                        .set_index(['country', 'date'])
                        [['retail_and_recreation', 'grocery_and_pharmacy', 'parks', 'transit_stations', 'workplaces', 'residential']]
                        .rename_axis('category', axis=1)
                        .stack()
                        .rename('value')
+                       .sort_index()
+                       .groupby(["country", "category"])
+                       .apply(lambda g: g.reset_index(["country", "category"], drop=True).rolling("7d").mean())
                        .reset_index()
                        )
     # .set_index(['iso_code', 'date']).select_dtypes(float).div(100)
