@@ -19,7 +19,7 @@ def fetch_google():
     df.columns = df.columns.map(lambda col: safe_match("(.*)_percent", col))
     # google_mobility = (google_mobility
     #             .merge(isocodes, left_on='country_region_code', right_on='alpha-2_code', how='left')
-    #             .merge(location_code, left_on='alpha-3_code', right_on='iso_code', how='left'))
+    #             .merge(location_code, left_on='alpha-3_code', right_on='iso_code', how='left')) 
 
     df = (
         df.loc[lambda f: f["sub_region_1"].isna() & f["sub_region_2"].isna()]
