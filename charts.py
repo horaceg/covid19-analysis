@@ -32,7 +32,11 @@ def make_ts_selections():
     )
 
     selection_tooltip = alt.selection_single(
-        fields=["date"], nearest=True, on="mouseover", empty="none", clear="mouseout",
+        fields=["date"],
+        nearest=True,
+        on="mouseover",
+        empty="none",
+        clear="mouseout",
     )
 
     return selection_legend, selection_tooltip
@@ -150,7 +154,9 @@ def make_dod_chart(dod_long):
 
 def combine_map_ts(map_chart, ts_chart, dod_chart, selection_legend):
     selection_country = alt.selection_single(
-        fields=["country"], name="Country of", empty="all",
+        fields=["country"],
+        name="Country of",
+        empty="all",
     )
 
     map_chart2 = (

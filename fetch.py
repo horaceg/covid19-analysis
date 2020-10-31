@@ -6,7 +6,9 @@ TS_URL = "https://pomber.github.io/covid19/timeseries.json"
 
 
 def fetch_timeseries(url):
-    response = requests.get(url,)
+    response = requests.get(
+        url,
+    )
     response
 
     data = json.loads(response.content.decode())

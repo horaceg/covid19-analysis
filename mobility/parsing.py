@@ -1,16 +1,16 @@
-from collections import defaultdict
 import glob
+import logging
 import os
 import sys
-import logging
-
-import numpy as np
-import pandas as pd
-from tqdm.auto import tqdm
-from geoIds import GEO_IDS
+from collections import defaultdict
 
 # PyMuPDF
 import fitz
+import numpy as np
+import pandas as pd
+from tqdm.auto import tqdm
+
+from geoIds import GEO_IDS
 
 
 def parse_stream(stream):
@@ -276,7 +276,11 @@ def parse_page_total(doc, ipage, verbose=False):
 
         ret.append(
             dict(
-                category=m[0], change=m[1], values=values, dates=dates, changecalc=maxy,
+                category=m[0],
+                change=m[1],
+                values=values,
+                dates=dates,
+                changecalc=maxy,
             )
         )
     return ret
